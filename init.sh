@@ -2,6 +2,10 @@
 
 ROOT_PATH=$(pwd)
 
+function checkExecutable() {
+    which $1 2>&1 > /dev/null
+}
+
 function printError() {
     echo "$(tput setaf 1)$1$(tput sgr0)"
 }
@@ -17,6 +21,8 @@ function moveAllDependencies() {
     echo "Moving Dependencies"
     # move all dependencies to the path the user provided us with
     cp -rf $ROOT_PATH/config $ROOT_PATH/.editorconfig $ROOT_PATH/package.json.template $ROOT_PATH/config.xml.template $ROOT_PATH/index.html .
+    # move the index file to app folder
+    mv index.html app
 }
 
 function formatTemplate() {
@@ -24,9 +30,9 @@ function formatTemplate() {
     mv package.json.template package.json
     mv config.xml.template config.xml
     # replace constants with the variables user passed
-    sed -i s/%APP_NAME%/$APP_NAME/ -e s/%APP_DISPLAY_NAME%/$APP_DISPLAY_NAME/ -e s/%APP_DESCRIPTION%/$APP_DESCRIPTION/ -e s/%APP_AUTHOR%/$APP_AUTHOR/ s/%APP_URL%/$APP_URL/ package.json
-    sed -i s/%APP_NAME%/$APP_NAME/ -e s/%APP_DISPLAY_NAME%/$APP_DISPLAY_NAME/ -e s/%APP_DESCRIPTION%/$APP_DESCRIPTION/ -e s/%APP_AUTHOR%/$APP_AUTHOR/ s/%APP_URL%/$APP_URL/ config.xml
-    sed -i s/%APP_NAME%/$APP_NAME/ index.xml
+    sed -i -e s/%APP_NAME%/"$APP_NAME"/ -e s/%APP_DISPLAY_NAME%/"$APP_DISPLAY_NAME"/ -e s/%APP_DESCRIPTION%/"$APP_DESCRIPTION"/ -e s/%APP_AUTHOR%/"$APP_AUTHOR"/ -e s/%APP_URL%/"$APP_URL"/ package.json
+    sed -i -e s/%APP_NAME%/"$APP_NAME"/ -e s/%APP_DISPLAY_NAME%/"$APP_DISPLAY_NAME"/ -e s/%APP_DESCRIPTION%/"$APP_DESCRIPTION"/ -e s/%APP_AUTHOR%/"$APP_AUTHOR"/ -e s/%APP_URL%/"$APP_URL"/ config.xml
+    sed -i -e s/%APP_NAME%/"$APP_NAME"/ app/index.html
 }
 
 function installDependencies() {
@@ -41,12 +47,12 @@ function initCordova() {
     # check if cordova exists
     # install cordova in local app
     # and use the node modules bin version
-    which $CORDOVA_EXEC
+    checkExecutable $CORDOVA_EXEC
     if [ $? -ne 0 ]; then
         #add latest cordova
         $PACKAGE_MANAGER add cordova
         CORDOVA_EXEC="./node_modules/.bin/cordova"
-    do
+    fi
 
     $CORDOVA_EXEC prepare
 
@@ -121,7 +127,7 @@ PACKAGE_MANAGER="yarn"
 
 # check if yarn package manager exists
 # if not use npm
-which $PACKAGE_MANAGER
+checkExecutable $PACKAGE_MANAGER
 if [ $? -ne 0 ]; then
     PACKAGE_MANAGER="npm"
 fi
