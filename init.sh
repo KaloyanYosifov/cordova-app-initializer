@@ -1,14 +1,59 @@
 #! /bin/bash
 
+ROOT_PATH=$(pwd)
+
 function printError() {
     echo "$(tput setaf 1)$1$(tput sgr0)"
 }
 
+function initBaseAppDirectiories() {
+    echo "Creating base directories"
+    # create app directory
+    mkdir -p app app/static app/js app/css app/fonts
+}
+
+function moveAllDependencies() {
+    echo "Moving Dependencies"
+    # move all dependencies to the path the user provided us with
+    cp -rf $ROOT_PATH/config $ROOT_PATH/.editorconfig $ROOT_PATH/package.json.template $ROOT_PATH/config.xml.template .
+}
+
+function formatTemplate() {
+    echo "Preparing package json"
+    mv package.json.template package.json
+    mv config.xml.template config.xml
+    # replace constants with the variables user passed
+    sed -i s/%APP_NAME%/$APP_NAME/ -e s/%APP_DISPLAY_NAME%/$APP_DISPLAY_NAME/ -e s/%APP_DESCRIPTION%/$APP_DESCRIPTION/ -e s/%APP_AUTHOR%/$APP_AUTHOR/ s/%APP_URL%/$APP_URL/ package.json
+    sed -i s/%APP_NAME%/$APP_NAME/ -e s/%APP_DISPLAY_NAME%/$APP_DISPLAY_NAME/ -e s/%APP_DESCRIPTION%/$APP_DESCRIPTION/ -e s/%APP_AUTHOR%/$APP_AUTHOR/ s/%APP_URL%/$APP_URL/ config.xml
+}
+
+function installDependencies() {
+    echo "Installing dependencies"
+    # use the package maanager to install dependencies from package.json
+    $PACKAGE_MANAGER install
+}
+
+function initCordova() {
+    echo "Initializing cordova"
+    CORDOVA_EXEC="cordova"
+    # check if cordova exists
+    # install cordova in local app
+    # and use the node modules bin version
+    which $CORDOVA_EXEC
+    if [ $? -ne 0 ]; then
+        #add latest cordova
+        $PACKAGE_MANAGER add cordova
+        CORDOVA_EXEC="./node_modules/.bin/cordova"
+    do
+
+    $CORDOVA_EXEC prepare
+}
 
 APP_NAME="app.cordova"
 APP_DISPLAY_NAME="Cordova App"
 APP_DESCRIPTION="Cordova App template"
 APP_AUTHOR="someone"
+APP_URL=""
 
 while [ $# -ne 0 ]; do
     case $1 in
@@ -36,8 +81,13 @@ while [ $# -ne 0 ]; do
             # remove parameter from $*
             shift
         ;;
+        "-u"|"--url")
+            APP_NAME=$2
+            # remove parameter from $*
+            shift
+        ;;
         "-h"|"--help")
-            echo "You can use the script as follows ($0 -p|--path ... [-a|author ...] [-n|--name ...] [-dn|--display-name ...] [-d|--descriptin])"
+            echo "You can use the script as follows ($0 -p|--path ... [-a|author ...] [-n|--name ...] [-dn|--display-name ...] [-d|--description ...] [-u|--url ...])"
             exit 0
     esac
 
@@ -73,3 +123,8 @@ if [ $? -ne 0 ]; then
     printError "Please install npm so we can initialize the project"
     exit 1
 fi
+
+initBaseAppDirectiories
+moveAllDependencies
+formatTemplate
+installDependencies

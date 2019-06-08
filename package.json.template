@@ -1,6 +1,6 @@
 {
     "name": "%APP_NAME%",
-    "displayName": "APP_DISPLAY_NAME",
+    "displayName": "%APP_DISPLAY_NAME%",
     "version": "1.0.8",
     "description": "%APP_DESCRIPTION%",
     "main": "index.js",
@@ -11,8 +11,10 @@
         "build-ios": "cordova build ios --buildConfig=build.json --buildFlag=\"-UseModernBuildSystem=0\""
     },
     "author": "%APP_AUTHOR%",
+    "url": "%APP_URL%",
     "license": "Apache-2.0",
     "dependencies": {
+        "cordova-plugin-browsersync": "git+https://github.com/KaloyanYosifov/cordova-plugin-browsersync.git",
         "autoprefixer": "^9.3.1",
         "axios": "^0.18.0",
         "babel-polyfill": "^6.26.0",
