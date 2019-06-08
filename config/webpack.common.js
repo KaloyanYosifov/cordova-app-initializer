@@ -22,7 +22,6 @@ module.exports = {
      * The point at which the application starts executing.
      */
     entry: [
-        'bootstrap-loader',
         './js/main.js',
         './css/main.scss'
     ],

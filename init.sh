@@ -14,7 +14,7 @@ function initBaseAppDirectiories() {
     echo "Creating base directories"
     # create app directory
     mkdir -p app app/{js,css,static} app/static/{images,fonts}
-    touch app/js/main.js app/css/main.css
+    touch app/js/main.js app/css/main.scss
 }
 
 function moveAllDependencies() {
@@ -54,6 +54,10 @@ function initCordova() {
         CORDOVA_EXEC="./node_modules/.bin/cordova"
     fi
 
+    # build the app so it is recognized as cordova
+    $PACKAGE_MANAGER build
+
+    # build cordova
     $CORDOVA_EXEC prepare
 
     # doing this step because sometimes cordova
@@ -142,5 +146,6 @@ initBaseAppDirectiories
 moveAllDependencies
 formatTemplate
 installDependencies
+initCordova
 
 echo "You are ready to start the project run (yarn dev) then open a new terminal and run (yarn start-server)"
