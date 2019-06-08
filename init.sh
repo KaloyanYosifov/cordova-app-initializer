@@ -4,17 +4,44 @@ function printError() {
     echo "$(tput setaf 1)$1$(tput sgr0)"
 }
 
+
+APP_NAME="app.cordova"
+APP_DISPLAY_NAME="Cordova App"
+APP_DESCRIPTION="Cordova App template"
+APP_AUTHOR="someone"
+
 while [ $# -ne 0 ]; do
     case $1 in
         "-p"|"--path")
             CORDOVA_PROJECT_PATH=$2
             shift
         ;;
+        "-n"|"--name")
+            APP_NAME=$2
+            # remove parameter from $*
+            shift
+        ;;
+        "-dn"|"--display-name")
+            APP_DISPLAY_NAME=$2
+            # remove parameter from $*
+            shift
+        ;;
+        "-d"|"--description")
+            APP_DESCRIPTION=$2
+            # remove parameter from $*
+            shift
+        ;;
+        "-a"|"--author")
+            APP_AUTHOR=$2
+            # remove parameter from $*
+            shift
+        ;;
         "-h"|"--help")
-            echo "You can use the script as follows ($0 -p|--path ...)"
+            echo "You can use the script as follows ($0 -p|--path ... [-a|author ...] [-n|--name ...] [-dn|--display-name ...] [-d|--descriptin])"
             exit 0
     esac
-    
+
+    # remove paramter from $*
     shift
 done
 
