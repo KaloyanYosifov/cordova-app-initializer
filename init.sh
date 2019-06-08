@@ -9,7 +9,8 @@ function printError() {
 function initBaseAppDirectiories() {
     echo "Creating base directories"
     # create app directory
-    mkdir -p app app/static app/js app/css app/fonts
+    mkdir -p app app/{js,css,static} app/static/{images,fonts}
+    touch app/js/main.js app/css/main.css
 }
 
 function moveAllDependencies() {
@@ -47,6 +48,12 @@ function initCordova() {
     do
 
     $CORDOVA_EXEC prepare
+
+    # doing this step because sometimes cordova
+    # remove packages from node modules
+    echo "reinstalling packages"
+    rm -rf node_modules
+    $PACKAGE_MANAGER install
 }
 
 APP_NAME="app.cordova"
@@ -128,3 +135,5 @@ initBaseAppDirectiories
 moveAllDependencies
 formatTemplate
 installDependencies
+
+echo "You are ready to start the project"
