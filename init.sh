@@ -16,7 +16,7 @@ function initBaseAppDirectiories() {
 function moveAllDependencies() {
     echo "Moving Dependencies"
     # move all dependencies to the path the user provided us with
-    cp -rf $ROOT_PATH/config $ROOT_PATH/.editorconfig $ROOT_PATH/package.json.template $ROOT_PATH/config.xml.template .
+    cp -rf $ROOT_PATH/config $ROOT_PATH/.editorconfig $ROOT_PATH/package.json.template $ROOT_PATH/config.xml.template $ROOT_PATH/index.html .
 }
 
 function formatTemplate() {
@@ -26,6 +26,7 @@ function formatTemplate() {
     # replace constants with the variables user passed
     sed -i s/%APP_NAME%/$APP_NAME/ -e s/%APP_DISPLAY_NAME%/$APP_DISPLAY_NAME/ -e s/%APP_DESCRIPTION%/$APP_DESCRIPTION/ -e s/%APP_AUTHOR%/$APP_AUTHOR/ s/%APP_URL%/$APP_URL/ package.json
     sed -i s/%APP_NAME%/$APP_NAME/ -e s/%APP_DISPLAY_NAME%/$APP_DISPLAY_NAME/ -e s/%APP_DESCRIPTION%/$APP_DESCRIPTION/ -e s/%APP_AUTHOR%/$APP_AUTHOR/ s/%APP_URL%/$APP_URL/ config.xml
+    sed -i s/%APP_NAME%/$APP_NAME/ index.xml
 }
 
 function installDependencies() {
@@ -136,4 +137,4 @@ moveAllDependencies
 formatTemplate
 installDependencies
 
-echo "You are ready to start the project"
+echo "You are ready to start the project run (yarn dev) then open a new terminal and run (yarn start-server)"
