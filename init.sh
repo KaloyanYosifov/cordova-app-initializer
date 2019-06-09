@@ -41,7 +41,7 @@ function formatTemplate() {
     # eval so we can pass the variables to awk
     # since if we escape quotes like \" it will print errors
     awk "${awkVariablesArray[@]}" -f $ROOT_PATH/replace-templates.awk package.json.template > package.json
-    awk "${awkVariablesArray[@]}" -f $ROOT_PATH/replace-templates.awk config.xml.template > configs.xml
+    awk "${awkVariablesArray[@]}" -f $ROOT_PATH/replace-templates.awk config.xml.template > config.xml
 
     # replace simple app name with sed
     sed -i -e s/%APP_NAME%/"$APP_NAME"/ app/index.html
