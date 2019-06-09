@@ -27,12 +27,25 @@ function moveAllDependencies() {
 
 function formatTemplate() {
     echo "Preparing package json"
-    mv package.json.template package.json
-    mv config.xml.template config.xml
     # replace constants with the variables user passed
-    sed -i -e s/%APP_NAME%/"$APP_NAME"/ -e s/%APP_DISPLAY_NAME%/"$APP_DISPLAY_NAME"/ -e s/%APP_DESCRIPTION%/"$APP_DESCRIPTION"/ -e s/%APP_AUTHOR%/"$APP_AUTHOR"/ -e s/%APP_URL%/"$APP_URL"/ package.json
-    sed -i -e s/%APP_NAME%/"$APP_NAME"/ -e s/%APP_DISPLAY_NAME%/"$APP_DISPLAY_NAME"/ -e s/%APP_DESCRIPTION%/"$APP_DESCRIPTION"/ -e s/%APP_AUTHOR%/"$APP_AUTHOR"/ -e s/%APP_URL%/"$APP_URL"/ config.xml
+    # using awk
+    awkVariablesArray=(
+        -v APP_NAME=''$APP_NAME''
+        -v APP_DISPLAY_NAME=''$APP_DISPLAY_NAME''
+        -v APP_DESCRIPTION=''$APP_DESCRIPTION''
+        -v APP_AUTHOR=''$APP_AUTHOR''
+        -v APP_URL=''$APP_URL''
+    )
+
+    # eval so we can pass the variables to awk
+    # since if we escape quotes like \" it will print errors
+    awk "${awkVariablesArray[@]}" -f $ROOT_PATH/replace-templates.awk package.json.template > package.json
+    awk "${awkVariablesArray[@]}" -f $ROOT_PATH/replace-templates.awk config.xml.template > configs.xml
+
+    # replace simple app name with sed
     sed -i -e s/%APP_NAME%/"$APP_NAME"/ app/index.html
+
+    rm -rf package.json.template config.xml.template
 }
 
 function installDependencies() {
@@ -73,6 +86,10 @@ APP_DESCRIPTION="Cordova App template"
 APP_AUTHOR="someone"
 APP_URL=""
 
+# we do serilization
+# so we can pass the data to sed to replace with
+# because if we have unescaped slash it can break the sed program
+
 while [ $# -ne 0 ]; do
     case $1 in
         "-p"|"--path")
@@ -100,7 +117,7 @@ while [ $# -ne 0 ]; do
             shift
         ;;
         "-u"|"--url")
-            APP_NAME=$2
+            APP_URL=$2
             # remove parameter from $*
             shift
         ;;

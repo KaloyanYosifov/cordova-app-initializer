@@ -16,4 +16,4 @@ You can pass additional paramaters alongside with the (-p = path) parameter (sho
 
 ### Examples
 `./init.sh -p PUT_CORDOVA_PROJECT_PATH_HERE`
-`./init/sh -p PUT_CORDOVA_PROJECT_PATH_HERE -a kyosifov -n com.kyosifov -dn Kaloyan App -d App example -u https://kyosifov.com`
+`./init/sh -p PUT_CORDOVA_PROJECT_PATH_HERE -a kyosifov -n com.kyosifov -dn "Kaloyan App" -d "App example" -u "https://kyosifov.com"`
