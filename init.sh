@@ -29,6 +29,7 @@ function formatTemplate() {
     echo "Preparing package json"
     # replace constants with the variables user passed
     # using awk
+    # we use '' as spaces, so it is recognized as a string when printing it to awk paramters
     awkVariablesArray=(
         -v APP_NAME=''$APP_NAME''
         -v APP_DISPLAY_NAME=''$APP_DISPLAY_NAME''
