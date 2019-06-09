@@ -67,7 +67,7 @@ function initCordova() {
     $PACKAGE_MANAGER install
 }
 
-APP_NAME="app.cordova"
+APP_NAME="com.example.app"
 APP_DISPLAY_NAME="Cordova App"
 APP_DESCRIPTION="Cordova App template"
 APP_AUTHOR="someone"
